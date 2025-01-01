@@ -63,6 +63,6 @@ class UserController extends Controller
             ]);
         }
 
-        return redirect()->back()->with('registrationPrice', $registrationPrice)->with('success', 'Registration successful!');
+        return redirect()->back()->with('registrationPrice', $registrationPrice);
     }
 }

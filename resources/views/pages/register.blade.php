@@ -75,20 +75,25 @@
                                         Add New Hobby
                                     </button>
                                 </div>
-                                <!-- Initial hobby inputs -->
-                                @for ($i = 1; $i <= 3; $i++)
+                                @foreach (old('hobbies', ['', '', '']) as $i => $hobby)
                                     <div class="row g-2 mb-3 align-items-center hobby-row">
                                         <div class="col-auto">
                                             <label for="hobby-{{ $i }}" class="col-form-label">Hobby
-                                                {{ $i }} :</label>
+                                                {{ $i + 1 }}:</label>
                                         </div>
                                         <div class="col">
-                                            <input placeholder="Hobby {{ $i }}" type="text"
-                                                name="hobby-{{ $i }}" id="hobby-{{ $i }}"
-                                                class="form-control border-secondary" required>
+                                            <input type="text" name="hobbies[]" id="hobby-{{ $i }}"
+                                                class="form-control border-secondary" value="{{ $hobby }}"
+                                                required placeholder="Hobby {{ $i + 1 }}">
                                         </div>
                                     </div>
-                                @endfor
+                                @endforeach
+                                @error('hobbies')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
+                                @error('hobbies.*')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="username" class="form-label">Username</label>
@@ -152,7 +157,7 @@
                         <label for="hobby-${hobbyCount}" class="col-form-label">Hobby ${hobbyCount}:</label>
                     </div>
                     <div class="col">
-                        <input placeholder="Hobby ${hobbyCount}" type="text" name="hobby-${hobbyCount}" id="hobby-${hobbyCount}" class="form-control border-secondary" required>
+                        <input placeholder="Hobby ${hobbyCount}" type="text" name="hobbies[]" id="hobby-${hobbyCount}" class="form-control border-secondary" required>
                     </div>
                 `;
                 hobbyContainer.appendChild(hobbyRow);
