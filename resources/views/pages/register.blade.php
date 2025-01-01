@@ -7,66 +7,168 @@
     <title>Register</title>
     <link rel="stylesheet" href="{{ asset('bootstrap/css/bootstrap.min.css') }}">
     <script src="{{ asset('bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        .custom-card {
+            height: 80vh;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custom-card-body {
+            flex: 1;
+            overflow-y: auto;
+        }
+
+        .custom-card-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .custom-card-body::-webkit-scrollbar-thumb {
+            background: #6c757d;
+            border-radius: 3px;
+        }
+
+        .custom-card-body::-webkit-scrollbar-thumb:hover {
+            background: #495057;
+        }
+
+        .custom-card-body::-webkit-scrollbar-track {
+            background: #f8f9fa;
+        }
+
+        .custom-card-body {
+            scrollbar-width: thin;
+            scrollbar-color: #6c757d #f8f9fa;
+        }
+    </style>
 </head>
 
 <body class="bg-warning">
     <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);" class="container">
         <div class="row justify-content-center">
             <div class="col-md-6">
-                <div class="card border-secondary">
+                <div class="shadow card border-secondary custom-card">
                     <div class="fw-bold card-header bg-secondary text-white text-center">Register</div>
-                    <div class="card-body">
-                        <form method="POST" action="{{ route('register') }}">
+                    <div class="card-body custom-card-body">
+                        <form method="POST" action="{{ route('do-register') }}">
                             @csrf
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username</label>
-                                <input type="text" name="username" id="username" class="form-control border-secondary"
-                                    required>
-                                @error('name')
-                                    <div class="text-secondary small">{{ $message }}</div>
-                                @enderror
-                            </div>
-                            <div class="mb-3">
                                 <label for="gender" class="form-label">Gender</label>
-                                <input type="text" name="gender" id="gender" class="form-control border-secondary"
-                                    required>
-                                @error('name')
-                                    <div class="text-secondary small">{{ $message }}</div>
+                                <select class="form-select border-secondary" name="gender" id="gender">
+                                    @foreach ($genders as $gender)
+                                        <option value="{{ $gender->id }}"
+                                            {{ old('gender') == $gender->id ? 'selected' : '' }}>
+                                            {{ $gender->gender }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                                @error('gender')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
+                            </div>
+                            <div class="mb-3" id="hobby-container">
+                                <div class="d-grid gap-2 mb-3">
+                                    <button type="button" id="add-hobby-btn"
+                                        class="fw-bold text-white btn btn-secondary">
+                                        Add New Hobby
+                                    </button>
+                                </div>
+                                <!-- Initial hobby inputs -->
+                                @for ($i = 1; $i <= 3; $i++)
+                                    <div class="row g-2 mb-3 align-items-center hobby-row">
+                                        <div class="col-auto">
+                                            <label for="hobby-{{ $i }}" class="col-form-label">Hobby
+                                                {{ $i }} :</label>
+                                        </div>
+                                        <div class="col">
+                                            <input placeholder="Hobby {{ $i }}" type="text"
+                                                name="hobby-{{ $i }}" id="hobby-{{ $i }}"
+                                                class="form-control border-secondary" required>
+                                        </div>
+                                    </div>
+                                @endfor
+                            </div>
+                            <div class="mb-3">
+                                <label for="username" class="form-label">Username</label>
+                                <input type="text" name="username" id="username"
+                                    placeholder="http://www.instagram.com/username"
+                                    class="form-control border-secondary" required>
+                                @error('username')
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
-                                <label for="email" class="form-label">{{ __('Email Address') }}</label>
-                                <input type="email" name="email" id="email" class="form-control border-secondary"
-                                    required>
-                                @error('email')
-                                    <div class="text-secondary small">{{ $message }}</div>
+                                <label for="mobile_number" class="form-label">Mobile Number</label>
+                                <input type="mobile_number" name="mobile_number" id="mobile_number"
+                                    class="form-control border-secondary" required placeholder="0123456789">
+                                @error('mobile_number')
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="password" class="form-label">{{ __('Password') }}</label>
-                                <input type="password" name="password" id="password" class="form-control border-secondary"
-                                    required>
+                                <input type="password" name="password" id="password" placeholder="**********"
+                                    class="form-control border-secondary" required>
                                 @error('password')
-                                    <div class="text-secondary small">{{ $message }}</div>
+                                    <div class="text-danger small">{{ $message }}</div>
                                 @enderror
                             </div>
                             <div class="mb-3">
                                 <label for="password_confirmation"
                                     class="form-label">{{ __('Confirm Password') }}</label>
                                 <input type="password" name="password_confirmation" id="password_confirmation"
-                                    class="form-control border-secondary" required>
+                                    placeholder="**********" class="form-control border-secondary" required>
+                                @error('password_confirmation')
+                                    <div class="text-danger small">{{ $message }}</div>
+                                @enderror
                             </div>
                             <div class="d-grid gap-2">
-                                <button type="submit" class="fw-bold btn btn-secondary">Register</button>
+                                <button type="submit" class="fw-bold text-white btn btn-secondary">Register</button>
                             </div>
                         </form>
                     </div>
                     <div class="card-footer text-center">
-                        <a href="{{ route('login') }}" class="text-secondary">Already have an account? Login</a>
+                        <a href="{{ route('login') }}" class="text-warning">Already have an account? Login</a>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const hobbyContainer = document.getElementById("hobby-container");
+            const addHobbyBtn = document.getElementById("add-hobby-btn");
+            let hobbyCount = 3; // Start from 3 since 3 hobbies are already present
+
+            addHobbyBtn.addEventListener("click", () => {
+                hobbyCount++;
+                const hobbyRow = document.createElement("div");
+                hobbyRow.className = "row g-2 mb-3 align-items-center hobby-row";
+                hobbyRow.innerHTML = `
+                    <div class="col-auto">
+                        <label for="hobby-${hobbyCount}" class="col-form-label">Hobby ${hobbyCount}:</label>
+                    </div>
+                    <div class="col">
+                        <input placeholder="Hobby ${hobbyCount}" type="text" name="hobby-${hobbyCount}" id="hobby-${hobbyCount}" class="form-control border-secondary" required>
+                    </div>
+                `;
+                hobbyContainer.appendChild(hobbyRow);
+            });
+        });
+
+        const registrationPrice = "{{ session('registrationPrice') }}";
+        if (registrationPrice) {
+            Swal.fire({
+                title: "Registration Successful!",
+                text: `Your registration price is: Rp ${registrationPrice}`,
+                icon: "success",
+                confirmButtonText: "Okay",
+            });
+        }
+    </script>
 </body>
+
 </html>

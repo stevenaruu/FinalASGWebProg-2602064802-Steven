@@ -22,7 +22,9 @@ class DatabaseSeeder extends Seeder
 
         $this->call([
             BearSeeder::class,
-            GenderSeeder::class
+            GenderSeeder::class,
+            UserSeeder::class,
+            HobbySeeder::class
         ]);
     }
 }

@@ -13,6 +13,13 @@ return new class extends Migration
     {
         Schema::create('user', function (Blueprint $table) {
             $table->id();
+            $table->string('username');
+            $table->foreignId('gender_id')->constrained('gender')->onDelete('cascade')->onUpdate('cascade');
+            $table->string('mobile_number');
+            $table->integer('coin');
+            $table->string('password');
+            $table->binary('image')->nullable();
+            $table->boolean('isVisible')->default(true);
             $table->timestamps();
         });
     }

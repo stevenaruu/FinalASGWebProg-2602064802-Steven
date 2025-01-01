@@ -18,7 +18,7 @@ class User extends Model
     }
 
     public function hobby() {
-        return $this->belongsTo(Hobby::class);
+        return $this->hasMany(Hobby::class);
     }
 
     public function avatar() {
