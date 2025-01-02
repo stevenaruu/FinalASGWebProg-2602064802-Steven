@@ -2,18 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Friend;
 use App\Models\Gender;
 use App\Models\Hobby;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
     public function index()
     {
-        return view('pages.home');
+        $users = User::with(['hobby']);
+        // $friends = [];
+
+        if (Auth::check()) {
+            $users = $users->where('id', '!=', Auth::user()->id);
+            // $friends = Friend::where('user_id', Auth::user()->id)->get();
+        }
+
+        $users = $users->get();
+
+        return view('pages.home', compact('users'));
     }
+
 
     public function register()
     {
@@ -64,5 +77,38 @@ class UserController extends Controller
         }
 
         return redirect()->back()->with('registrationPrice', $registrationPrice);
+    }
+
+    public function login()
+    {
+        return view('pages.login');
+    }
+
+    public function do_login(Request $request)
+    {
+        $request->validate([
+            'mobile_number' => 'required',
+            'password' => 'required',
+        ]);
+
+        $credentials = $request->only('mobile_number', 'password');
+
+        if (Auth::attempt($credentials)) {
+            return redirect()->route('home');
+        }
+
+        return back()->withErrors(['login' => 'Invalid credentials.'])->withInput();
+    }
+
+    public function logout()
+    {
+        Auth::logout();
+        return redirect()->route('home');
+    }
+
+    public function profile($id)
+    {
+        $user = User::findOrFail($id);
+        return view('profile', compact('user'));
     }
 }

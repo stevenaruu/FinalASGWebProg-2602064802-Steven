@@ -24,7 +24,8 @@ class DatabaseSeeder extends Seeder
             BearSeeder::class,
             GenderSeeder::class,
             UserSeeder::class,
-            HobbySeeder::class
+            HobbySeeder::class,
+            FriendSeeder::class
         ]);
     }
 }

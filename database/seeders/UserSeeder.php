@@ -15,14 +15,32 @@ class UserSeeder extends Seeder
     {
         //
         $user = [
-            'username' => 'http://www.instagram.com/stvnism',
-            'gender_id' => 1,
-            'mobile_number' => '0881025599917',
-            'coin' => 99999,
-            'password' => bcrypt('Steven123!'),
-            'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            [
+                'username' => 'http://www.instagram.com/stvnism',
+                'gender_id' => 1,
+                'mobile_number' => '0881025599917',
+                'coin' => 99999,
+                'password' => bcrypt('Steven123!'),
+                'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            ],
+            [
+                'username' => 'http://www.instagram.com/stevenforsythia',
+                'gender_id' => 1,
+                'mobile_number' => '0881025599918',
+                'coin' => 99999,
+                'password' => bcrypt('Steven123!'),
+                'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            ],
+            [
+                'username' => 'http://www.instagram.com/sforsythia',
+                'gender_id' => 2,
+                'mobile_number' => '0881025599919',
+                'coin' => 99999,
+                'password' => bcrypt('Steven123!'),
+                'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            ],
         ];
 
-        User::create($user);
+        User::insert($user);
     }
 }
