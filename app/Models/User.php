@@ -6,6 +6,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Auth;
 
 class User extends Authenticatable
 {
@@ -15,31 +16,43 @@ class User extends Authenticatable
     protected $table = 'user';
     protected $guarded = [];
 
-    public function gender() {
+    public function gender()
+    {
         return $this->belongsTo(Gender::class);
     }
 
-    public function hobby() {
+    public function hobby()
+    {
         return $this->hasMany(Hobby::class);
     }
 
-    public function avatar() {
+    public function avatar()
+    {
         return $this->hasMany(avatar::class);
     }
 
-    public function sent_chat() {
+    public function sent_chat()
+    {
         return $this->hasMany(Chat::class, 'sender_id');
     }
 
-    public function receive_chat() {
+    public function receive_chat()
+    {
         return $this->hasMany(Chat::class, 'recipient_id');
     }
 
-    public function self() {
+    public function self()
+    {
         return $this->hasMany(Friend::class, 'user_id');
     }
 
-    public function friend() {
+    public function friend()
+    {
         return $this->hasMany(Friend::class, 'friend_id');
+    }
+
+    public function friendStatus()
+    {
+        return $this->hasOne(Friend::class, 'friend_id')->where('user_id', Auth::user()->id);
     }
 }

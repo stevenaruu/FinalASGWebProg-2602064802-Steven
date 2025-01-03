@@ -36,5 +36,19 @@ class HobbySeeder extends Seeder
                 'hobby' => $hobby     
             ]);
         }
+
+        foreach($hobbies as $hobby) {
+            Hobby::create([
+                'user_id' =>'4',
+                'hobby' => $hobby     
+            ]);
+        }
+
+        foreach($hobbies as $hobby) {
+            Hobby::create([
+                'user_id' =>'5',
+                'hobby' => $hobby     
+            ]);
+        }
     }
 }

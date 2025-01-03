@@ -55,7 +55,7 @@
                 </div>
                 <div class="mb-3">
                     <label for="mobile_number" class="form-label">Mobile Number</label>
-                    <input type="mobile_number" name="mobile_number" id="mobile_number"
+                    <input type="text" name="mobile_number" id="mobile_number"
                         class="form-control border-secondary" required placeholder="0123456789">
                     @error('mobile_number')
                         <div class="text-danger small">{{ $message }}</div>

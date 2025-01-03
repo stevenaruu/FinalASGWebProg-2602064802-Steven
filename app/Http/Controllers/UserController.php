@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
 use App\Models\Friend;
 use App\Models\Gender;
 use App\Models\Hobby;
@@ -15,16 +16,26 @@ class UserController extends Controller
     public function index()
     {
         $users = User::with(['hobby']);
-        // $friends = [];
+        $chat_notif = 0;
 
         if (Auth::check()) {
-            $users = $users->where('id', '!=', Auth::user()->id);
-            // $friends = Friend::where('user_id', Auth::user()->id)->get();
+            $users = User::with(['hobby', 'friendStatus'])
+                ->where('id', '!=', Auth::user()->id)
+                // ->whereNotIn('user.id', $user_request->pluck('friend_id'))
+                ->whereNotIn('id', function ($query) {
+                    $query->select('friend_id')
+                        ->from('friend')
+                        ->where('user_id', Auth::user()->id)
+                        ->where('status', '!=', 'Sent');
+                });
+
+            $chat_notif = Chat::where('recipient_id', Auth::user()->id)
+                ->where('isRead', false)->count();
         }
 
         $users = $users->get();
 
-        return view('pages.home', compact('users'));
+        return view('pages.home', compact('users', 'chat_notif'));
     }
 
 

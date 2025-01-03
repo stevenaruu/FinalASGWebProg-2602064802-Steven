@@ -15,10 +15,17 @@
                         {{ $user->username }}
                     </div>
                     <div class="d-flex gap-2">
-                        <div style="height: 30px; width: 30px" class="overflow-hidden">
+                        @if (auth()->check() && $user->friendStatus)
+                            <span
+                                class="alert m-0 alert-secondary fw-bold justify-content-center text-secondary rounded-pill d-flex align-items-center py-1 px-3">{{ $user->friendStatus->status }}</span>
+                        @endif
+                        <div role="button"
+                            onclick="window.location='{{ auth()->check() ? route('add-remove-friend', $user->id) : route('login') }}'"
+                            style="height: 30px; width: 30px" class="overflow-hidden">
                             @if (auth()->check())
-                                <span
-                                    class="bg-warning fw-bold justify-content-center text-white rounded-pill d-flex align-items-center py-1 px-3">pending</span>
+                                <img class="w-100 h-100 object-fit-cover"
+                                    src="{{ $user->friendStatus ? asset('assets/images/friend.png') : asset('assets/images/like.png') }}"
+                                    alt="add-friends">
                             @else
                                 <img class="w-100 h-100 object-fit-cover" src="{{ asset('assets/images/like.png') }}"
                                     alt="add-friends">
@@ -28,11 +35,13 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3">
-                        <div onclick="window.location='{{ auth()->check() ? route('profile', $user->id) : route('login') }}'" role="button" style="height: 50px; width: 50px" class="rounded-circle overflow-hidden">
+                        <div onclick="window.location='{{ auth()->check() ? route('profile', $user->id) : route('login') }}'"
+                            role="button" style="height: 50px; width: 50px" class="rounded-circle overflow-hidden">
                             <img class="w-100 h-100 object-fit-cover rounded-circle"
                                 src="data:image/jpeg;base64,{{ base64_encode($user->image) }}" alt="profile-image">
                         </div>
-                        <h5 onclick="window.location='{{ auth()->check() ? route('profile', $user->id) : route('login') }}'" role="button" class="card-title">{{ trim(parse_url($user->username, PHP_URL_PATH), '/') }}</h5>
+                        <h5 onclick="window.location='{{ auth()->check() ? route('profile', $user->id) : route('login') }}'"
+                            role="button" class="card-title">{{ trim(parse_url($user->username, PHP_URL_PATH), '/') }}</h5>
                     </div>
                     <div class="card-text mt-3 d-flex flex-wrap gap-2">
                         @foreach ($user->hobby as $hobby)
@@ -44,4 +53,5 @@
             </div>
         @endforeach
     </div>
+    @include('components.chat-button')
 @endsection

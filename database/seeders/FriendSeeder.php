@@ -18,22 +18,32 @@ class FriendSeeder extends Seeder
             [
                 'user_id' => '1',
                 'friend_id' => '2',
-                'status' => 'approved'
+                'status' => 'Friend'
             ],
             [
                 'user_id' => '2',
                 'friend_id' => '1',
-                'status' => 'approved'
+                'status' => 'Friend'
             ],
             [
                 'user_id' => '1',
                 'friend_id' => '3',
-                'status' => 'sent'
+                'status' => 'Sent'
             ],
             [
                 'user_id' => '3',
                 'friend_id' => '1',
-                'status' => 'pending'
+                'status' => 'Pending'
+            ],
+            [
+                'user_id' => '1',
+                'friend_id' => '5',
+                'status' => 'Friend'
+            ],
+            [
+                'user_id' => '5',
+                'friend_id' => '1',
+                'status' => 'Friend'
             ],
         ];
 

@@ -39,6 +39,22 @@ class UserSeeder extends Seeder
                 'password' => bcrypt('Steven123!'),
                 'image' => file_get_contents(public_path('assets/images/default.jpg')),
             ],
+            [
+                'username' => 'http://www.instagram.com/historia',
+                'gender_id' => 2,
+                'mobile_number' => '0881025599910',
+                'coin' => 99999,
+                'password' => bcrypt('Steven123!'),
+                'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            ],
+            [
+                'username' => 'http://www.instagram.com/apple',
+                'gender_id' => 2,
+                'mobile_number' => '0123456789',
+                'coin' => 99999,
+                'password' => bcrypt('Steven123!'),
+                'image' => file_get_contents(public_path('assets/images/default.jpg')),
+            ],
         ];
 
         User::insert($user);
