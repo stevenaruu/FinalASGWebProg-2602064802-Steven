@@ -16,20 +16,15 @@
         </form>
 
         <div class="d-flex align-items-center gap-2">
-            <form class="me-2"
-                action="{{ route('set-locale', ['locale' => app()->getLocale() == 'en' ? 'id' : 'en']) }}"
-                method="GET">
-                <div onclick="this.closest('form').submit()" role="button" style="height: 30px; width: 30px"
-                    class="overflow-hidden">
-                    @if (app()->getLocale() == 'en')
-                        <img src="{{ asset('assets/images/id.png') }}" alt="Bahasa Indonesia"
-                            class="w-100 h-100 object-fit-cover">
-                    @else
-                        <img src="{{ asset('assets/images/en.png') }}" alt="English"
-                            class="w-100 h-100 object-fit-cover">
-                    @endif
-                </div>
-            </form>
+            <div role="button" style="height: 30px; width: 30px" class="me-2 overflow-hidden">
+                @if (app()->getLocale() == 'en')
+                    <img onclick="window.location='{{ route('set-locale', 'id') }}'" src="{{ asset('assets/images/id.png') }}"
+                        alt="Bahasa Indonesia" class="w-100 h-100 object-fit-cover">
+                @else
+                    <img onclick="window.location='{{ route('set-locale', 'en') }}'" src="{{ asset('assets/images/en.png') }}"
+                        alt="English" class="w-100 h-100 object-fit-cover">
+                @endif
+            </div>
             @if (auth()->check())
                 <button onclick="window.location='{{ route('friend') }}'"
                     class="btn btn-secondary d-flex align-items-center">
