@@ -3,13 +3,18 @@
 @section('auth')
     <div class="shadow card border-secondary">
         <div class="fw-bold card-header bg-secondary text-white text-center">Login</div>
+        @if ($errors->has('login'))
+            <div class="alert alert-danger">
+                {{ $errors->first('login') }}
+            </div>
+        @endif
         <div class="card-body">
             <form method="POST" action="{{ route('do-login') }}">
                 @csrf
                 <div class="mb-3">
                     <label for="mobile_number" class="form-label">Mobile Number</label>
-                    <input type="text" name="mobile_number" id="mobile_number"
-                        class="form-control border-secondary" required placeholder="0123456789">
+                    <input type="text" name="mobile_number" id="mobile_number" class="form-control border-secondary"
+                        required placeholder="0123456789">
                     @error('mobile_number')
                         <div class="text-danger small">{{ $message }}</div>
                     @enderror

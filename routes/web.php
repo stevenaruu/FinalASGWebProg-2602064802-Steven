@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FriendController;
+use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -10,8 +11,14 @@ Route::get('/', [UserController::class, 'index'])->name('home');
 Route::middleware(['CheckAuth:guest'])->group(function () {
     Route::get('/register', [UserController::class, 'register'])->name('register');
     Route::post('/register', [UserController::class, 'do_register'])->name('do-register');
+    
     Route::get('/login', [UserController::class, 'login'])->name('login');
     Route::post('/login', [UserController::class, 'do_login'])->name('do-login');
+
+    Route::get('/payment', [PaymentController::class, 'show_payment_page'])->name('payment-show');
+    Route::post('/payment', [PaymentController::class, 'process_payment'])->name('payment-process');
+
+    Route::post('/payment-overpaid', [PaymentController::class, 'handle_overpaid'])->name('payment-overpaid');
 });
 
 Route::middleware(['CheckAuth:auth'])->group(function () {

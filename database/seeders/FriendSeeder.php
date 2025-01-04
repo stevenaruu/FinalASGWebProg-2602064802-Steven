@@ -33,7 +33,7 @@ class FriendSeeder extends Seeder
             [
                 'user_id' => '3',
                 'friend_id' => '1',
-                'status' => 'Pending'
+                'status' => 'Friend Request'
             ],
             [
                 'user_id' => '1',

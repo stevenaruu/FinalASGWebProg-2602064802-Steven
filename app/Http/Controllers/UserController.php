@@ -13,31 +13,39 @@ use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $users = User::with(['hobby']);
-        $chat_notif = 0;
+        $query = User::with(['hobby', 'gender']);
 
         if (Auth::check()) {
-            $users = User::with(['hobby', 'friendStatus'])
-                ->where('id', '!=', Auth::user()->id)
-                // ->whereNotIn('user.id', $user_request->pluck('friend_id'))
+            $query = User::with(['hobby', 'gender', 'friendStatus']);
+            $query->where('id', '!=', Auth::id())
                 ->whereNotIn('id', function ($query) {
                     $query->select('friend_id')
                         ->from('friend')
-                        ->where('user_id', Auth::user()->id)
-                        ->where('status', '!=', 'Sent');
+                        ->where('user_id', Auth::id())
+                        ->where('status', 'Friend');
                 });
-
-            $chat_notif = Chat::where('recipient_id', Auth::user()->id)
-                ->where('isRead', false)->count();
         }
 
-        $users = $users->get();
+        // Filter by gender
+        if ($request->has('gender') && $request->query('gender')) {
+            $query->where('gender_id', $request->query('gender'));
+        }
 
-        return view('pages.home', compact('users', 'chat_notif'));
+        // Filter by hobby
+        if ($request->has('hobby') && $request->query('hobby')) {
+            $query->whereHas('hobby', function ($q) use ($request) {
+                $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
+            });
+        }
+
+        $users = $query->get();
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+        $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
+
+        return view('pages.home', compact('users', 'chat_notif', 'request_notif'));
     }
-
 
     public function register()
     {
@@ -69,25 +77,26 @@ class UserController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $registrationPrice = random_int(100000, 125000);
+        $registration_price = random_int(100000, 125000);
 
-        $user = User::create([
+        $user_data = [
             'username' => $request->username,
             'gender_id' => $request->gender,
             'mobile_number' => $request->mobile_number,
             'coin' => 0,
-            'password' => bcrypt($request->password),
+            'password' => $request->password,
             'image' => file_get_contents(public_path('assets/images/default.jpg')),
+        ];
+
+        $hobbies_data = $request->hobbies;
+
+        session([
+            'user_data' => $user_data,
+            'hobbies_data' => $hobbies_data,
+            'registration_price' => $registration_price,
         ]);
 
-        foreach ($request->hobbies as $hobby) {
-            Hobby::create([
-                'user_id' => $user->id,
-                'hobby' => $hobby,
-            ]);
-        }
-
-        return redirect()->back()->with('registrationPrice', $registrationPrice);
+        return redirect()->route('payment-show');
     }
 
     public function login()
@@ -108,7 +117,7 @@ class UserController extends Controller
             return redirect()->route('home');
         }
 
-        return back()->withErrors(['login' => 'Invalid credentials.'])->withInput();
+        return redirect()->route('login')->withErrors(['login' => 'Invalid credentials.'])->withInput();
     }
 
     public function logout()
@@ -120,6 +129,9 @@ class UserController extends Controller
     public function profile($id)
     {
         $user = User::findOrFail($id);
-        return view('profile', compact('user'));
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+        $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
+
+        return view('pages.profile', compact('user', 'chat_notif', 'request_notif'));
     }
 }

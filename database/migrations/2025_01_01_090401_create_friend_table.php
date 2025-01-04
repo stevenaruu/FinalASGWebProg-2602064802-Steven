@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained('user')->onDelete('cascade')->onUpdate('cascade');
             $table->foreignId('friend_id')->constrained('user')->onDelete('cascade')->onUpdate('cascade');
-            $table->enum('status', ['Sent', 'Pending', 'Friend']);
+            $table->enum('status', ['Sent', 'Friend Request', 'Friend']);
             $table->timestamps();
         });
     }

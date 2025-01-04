@@ -19,7 +19,10 @@ class FriendController extends Controller
             ->select('friend.*', 'user.*', DB::raw('(SELECT COUNT(*) FROM chat WHERE recipient_id = ' . Auth::user()->id . ' AND isRead = false AND sender_id = friend.friend_id) AS unread'))
             ->get();
 
-        return view('pages.friend', compact('friends'));
+        $request_notif = Friend::where('user_id', Auth::user()->id)
+            ->where('status', 'Friend Request')->count() ?? 0;
+
+        return view('pages.friend', compact('friends', 'request_notif'));
     }
 
     public function friend_request()
@@ -27,10 +30,13 @@ class FriendController extends Controller
         $friends = Friend::where('friend.user_id', Auth::user()->id)
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
-            ->where('status', 'Pending')
+            ->where('status', 'Friend Request')
             ->get();
 
-        return view('pages.friend-request', compact('friends'));
+        $request_notif = Friend::where('user_id', Auth::user()->id)
+            ->where('status', 'Friend Request')->count() ?? 0;
+
+        return view('pages.friend-request', compact('friends', 'request_notif'));
     }
 
     public function sent_request()
@@ -41,7 +47,10 @@ class FriendController extends Controller
             ->where('status', 'Sent')
             ->get();
 
-        return view('pages.sent-request', compact('friends'));
+        $request_notif = Friend::where('user_id', Auth::user()->id)
+            ->where('status', 'Friend Request')->count() ?? 0;
+
+        return view('pages.sent-request', compact('friends', 'request_notif'));
     }
 
     public function add_remove_friend($id)
@@ -62,7 +71,7 @@ class FriendController extends Controller
             Friend::create([
                 'user_id' => $id,
                 'friend_id' => Auth::user()->id,
-                'status' => 'Pending'
+                'status' => 'Friend Request'
             ]);
         }
 

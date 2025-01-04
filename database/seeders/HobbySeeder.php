@@ -14,7 +14,8 @@ class HobbySeeder extends Seeder
     public function run(): void
     {
         //
-        $hobbies = ['sleeping', 'coding', 'watching videos'];
+        $hobbies = ['Sleeping', 'Coding', 'Watching videos'];
+        $hobbies2 = ['Cooking', 'Dance', 'Drawing'];
         
         foreach($hobbies as $hobby) {
             Hobby::create([
@@ -44,7 +45,7 @@ class HobbySeeder extends Seeder
             ]);
         }
 
-        foreach($hobbies as $hobby) {
+        foreach($hobbies2 as $hobby) {
             Hobby::create([
                 'user_id' =>'5',
                 'hobby' => $hobby     
