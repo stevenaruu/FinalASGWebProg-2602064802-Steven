@@ -24,7 +24,7 @@
                             style="height: 30px; width: 30px" class="overflow-hidden">
                             @if (auth()->check())
                                 <img class="w-100 h-100 object-fit-cover"
-                                    src="{{ $user->friendStatus && $user->friendStatus->status === 'Sent' ? asset('assets/images/friend.png') : asset('assets/images/like.png') }}"
+                                    src="{{ $user->friendStatus && ($user->friendStatus->status === 'Sent' || $user->friendStatus->status === 'Dikirim') ? asset('assets/images/friend.png') : asset('assets/images/like.png') }}"
                                     alt="add-friends">
                             @else
                                 <img class="w-100 h-100 object-fit-cover" src="{{ asset('assets/images/like.png') }}"

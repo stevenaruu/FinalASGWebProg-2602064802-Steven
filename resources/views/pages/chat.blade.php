@@ -66,10 +66,10 @@
             <div class="card-footer alert alert-warning m-0">
                 <form method="POST" class="d-flex gap-3" action="{{ route('send-message') }}">
                     @csrf
-                    <input placeholder="Type a message" class="px-2 w-100" type="text" name="message" id="message">
+                    <input placeholder="@lang('lang.type_message')" class="px-2 w-100" type="text" name="message" id="message">
                     <input type="hidden" name="recipient_id" value="{{ $recipient->id }}" id="recipient_id">
                     <input type="hidden" name="sender_id" value="{{ auth()->user()->id }}" id="sender_id">
-                    <button type="submit" class="btn btn-warning">Send</button>
+                    <button type="submit" class="btn btn-warning">@lang('lang.send')</button>
                 </form>
             </div>
         </div>

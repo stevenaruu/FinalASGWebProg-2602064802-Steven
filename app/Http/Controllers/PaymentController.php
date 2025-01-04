@@ -31,9 +31,9 @@ class PaymentController extends Controller
         session(['overpaid_amount' => $overpaid]);
 
         if ($underpaid > 0) {
-            return redirect()->route('payment-show')->with('warning', "You are still underpaid by $underpaid Coins.");
+            return redirect()->route('payment-show')->with('warning', __('lang.underpaid') . ' ' . $underpaid . ' ' . __('lang.coin'));
         } elseif ($overpaid > 0) {
-            return redirect()->route('payment-show')->with('confirm_overpaid', "Sorry, you overpaid by $overpaid Coins. Would you like to add the excess to your wallet?");
+            return redirect()->route('payment-show')->with('confirm_overpaid', __('lang.overpaid') . ' ' . $overpaid . ' ' . __('lang.coin') . '. ' . __('lang.exceess'));
         }
 
         return $this->finalize_payment(0);
@@ -49,7 +49,7 @@ class PaymentController extends Controller
             return $this->finalize_payment($overpaid);
         } elseif ($action === 'no') {
             session()->forget(['overpaid_amount']);
-            return redirect()->route('payment-show')->with('confirm_overpaid', "Sorry, you overpaid by $price Coins. Would you like to add the excess to your wallet?");
+            return view('pages.payment', compact('price'));
         }
     }
 
@@ -74,6 +74,6 @@ class PaymentController extends Controller
             return redirect()->route('home');
         }
 
-        return back()->withErrors(['login' => 'Invalid credentials.'])->withInput();
+        return redirect()->route('login')->withErrors(['login' => __('lang.invalid_credentials')])->withInput();
     }
 }

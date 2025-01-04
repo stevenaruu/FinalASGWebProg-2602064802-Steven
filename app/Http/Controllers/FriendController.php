@@ -17,7 +17,11 @@ class FriendController extends Controller
             ->with(['user.hobby'])
             ->where('status', 'Friend')
             ->select('friend.*', 'user.*', DB::raw('(SELECT COUNT(*) FROM chat WHERE recipient_id = ' . Auth::user()->id . ' AND isRead = false AND sender_id = friend.friend_id) AS unread'))
-            ->get();
+            ->get()
+            ->map(function ($friend) {
+                $friend->status = __('lang.friend');
+                return $friend;
+            });
 
         $request_notif = Friend::where('user_id', Auth::user()->id)
             ->where('status', 'Friend Request')->count() ?? 0;
@@ -31,7 +35,11 @@ class FriendController extends Controller
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
             ->where('status', 'Friend Request')
-            ->get();
+            ->get()
+            ->map(function ($friend) {
+                $friend->status = __('lang.friend_request');
+                return $friend;
+            });
 
         $request_notif = Friend::where('user_id', Auth::user()->id)
             ->where('status', 'Friend Request')->count() ?? 0;
@@ -45,7 +53,11 @@ class FriendController extends Controller
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
             ->where('status', 'Sent')
-            ->get();
+            ->get()
+            ->map(function ($friend) {
+                $friend->status = __('lang.sent_request');
+                return $friend;
+            });
 
         $request_notif = Friend::where('user_id', Auth::user()->id)
             ->where('status', 'Friend Request')->count() ?? 0;

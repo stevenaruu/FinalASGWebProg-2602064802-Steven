@@ -34,3 +34,10 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
     Route::get('/chat/{user_id}/{friend_id}', [ChatController::class, 'index'])->name('chat');
     Route::post('/chat', [ChatController::class, 'send_message'])->name('send-message');
 });
+
+Route::get('/set-locale/{locale}', function ($locale) {
+    if (in_array($locale, ['en', 'id'])) {
+        session()->put('locale', $locale);
+    }
+    return redirect()->back();
+})->name('set-locale');

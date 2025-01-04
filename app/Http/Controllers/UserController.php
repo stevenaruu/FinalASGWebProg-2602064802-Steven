@@ -28,19 +28,23 @@ class UserController extends Controller
                 });
         }
 
-        // Filter by gender
         if ($request->has('gender') && $request->query('gender')) {
             $query->where('gender_id', $request->query('gender'));
         }
 
-        // Filter by hobby
         if ($request->has('hobby') && $request->query('hobby')) {
             $query->whereHas('hobby', function ($q) use ($request) {
                 $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
             });
         }
 
-        $users = $query->get();
+        $users = $query->get()->map(function ($user) {
+            if (isset($user->friendStatus)) {
+                $user->friendStatus->status = __('lang.' . strtolower(str_replace(' ', '_', $user->friendStatus->status)));
+            }
+            return $user;
+        });
+
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
         $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
 
@@ -63,14 +67,14 @@ class UserController extends Controller
             'mobile_number' => 'required|digits_between:10,15',
             'password' => 'required|min:8|confirmed',
         ], [
-            'gender.required' => 'Please select your gender.',
-            'gender.exists' => 'The selected gender is invalid.',
-            'hobbies.required' => 'You must add at least 3 hobbies.',
-            'hobbies.min' => 'You must provide at least 3 hobbies.',
-            'username.regex' => 'Your Instagram username must be a valid link starting with "http://www.instagram.com/".',
-            'mobile_number.digits_between' => 'The mobile number must be between 10 and 15 digits.',
-            'password.min' => 'The password must be at least 8 characters.',
-            'password.confirmed' => 'The password confirmation does not match.',
+            'gender.required' => __('lang.select_gender'),
+            'gender.exists' => __('lang.invalid_gender'),
+            'hobbies.required' => __('lang.required_hobbies'),
+            'hobbies.min' => __('lang.min_hobbies'),
+            'username.regex' => __('lang.username_format'),
+            'mobile_number.digits_between' => __('lang.mobile_number_format'),
+            'password.min' => __('lang.password_min'),
+            'password.confirmed' => __('lang.password_confirmation'),
         ]);
 
         if ($validator->fails()) {
@@ -117,7 +121,7 @@ class UserController extends Controller
             return redirect()->route('home');
         }
 
-        return redirect()->route('login')->withErrors(['login' => 'Invalid credentials.'])->withInput();
+        return redirect()->route('login')->withErrors(['login' => __('lang.invalid_credentials')])->withInput();
     }
 
     public function logout()
