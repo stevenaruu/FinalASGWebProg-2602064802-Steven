@@ -32,7 +32,7 @@
         </div>
         <div class="row mt-3">
             <div class="col-sm-6">
-                <div style="height: 305px" class="card">
+                <div style="height: 365px" class="card">
                     <div class="card-header text-center fw-bold alert alert-warning m-0">
                         Information
                     </div>
@@ -61,13 +61,14 @@
                 </div>
             </div>
             <div class="col-sm-6">
-                <div style="height: 305px" class="card">
+                <div style="height: 365px" class="card">
                     <div class="card-header text-center fw-bold alert alert-warning m-0">
                         Settings
                     </div>
                     <div class="card-body d-flex flex-column">
                         <button onclick="window.location='{{ route('avatar') }}'" class="alert alert-secondary py-2 fw-bold">Avatar</button>
                         <button onclick="window.location='{{ route('top-up') }}'" class="alert alert-secondary py-2 fw-bold">Top Up Coins</button>
+                        <button onclick="window.location='{{ route('show-off') }}'" class="alert alert-secondary py-2 fw-bold">Show Off</button>
                         <form action="{{ $user->isVisible ? route('make-invisible') : route('make-visible') }}"
                             method="POST">
                             @csrf

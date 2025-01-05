@@ -26,9 +26,9 @@ class User extends Authenticatable
         return $this->hasMany(Hobby::class);
     }
 
-    public function avatar()
+    public function user_avatar()
     {
-        return $this->hasMany(avatar::class);
+        return $this->hasMany(UserAvatar::class);
     }
 
     public function sent_chat()

@@ -43,6 +43,7 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
     Route::post('/top-up', [PaymentController::class, 'do_top_up'])->name('do-top-up');
 
     Route::get('/avatar', [AvatarController::class, 'index'])->name('avatar');
+    Route::get('/avatar/show-off', [AvatarController::class, 'show_off'])->name('show-off');
 });
 
 Route::get('/set-locale/{locale}', function ($locale) {

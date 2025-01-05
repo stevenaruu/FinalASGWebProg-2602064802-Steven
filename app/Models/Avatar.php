@@ -13,7 +13,7 @@ class Avatar extends Model
     protected $table = 'avatar';
     protected $guarded = [];
 
-    public function user() {
-        return $this->belongsTo(User::class);
+    public function user_avatar() {
+        return $this->hasOne(UserAvatar::class);
     }
 }

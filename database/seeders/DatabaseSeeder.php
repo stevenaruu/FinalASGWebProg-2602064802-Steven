@@ -26,7 +26,9 @@ class DatabaseSeeder extends Seeder
             UserSeeder::class,
             HobbySeeder::class,
             FriendSeeder::class,
-            ChatSeeder::class
+            ChatSeeder::class,
+            AvatarSeeder::class,
+            UserAvatarSeeder::class
         ]);
     }
 }

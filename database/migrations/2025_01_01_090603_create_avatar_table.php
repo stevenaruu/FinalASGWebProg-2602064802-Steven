@@ -13,10 +13,8 @@ return new class extends Migration
     {
         Schema::create('avatar', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->constrained('user')->onDelete('cascade')->onUpdate('cascade');
-            $table->binary('image');
-            $table->boolean('isActive')->default(false);
-            $table->enum('status', ['pending', 'idle']);
+            $table->string('title');
+            $table->longText('image')->charset('binary');
             $table->timestamps();
         });
     }
