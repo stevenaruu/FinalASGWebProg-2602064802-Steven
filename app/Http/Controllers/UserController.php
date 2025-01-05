@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Bear;
 use App\Models\Chat;
 use App\Models\Friend;
 use App\Models\Gender;
@@ -15,10 +16,10 @@ class UserController extends Controller
 {
     public function index(Request $request)
     {
-        $query = User::with(['hobby', 'gender']);
+        $query = User::with(['hobby', 'gender'])->where('isVisible', true);
 
         if (Auth::check()) {
-            $query = User::with(['hobby', 'gender', 'friendStatus']);
+            $query = User::with(['hobby', 'gender', 'friendStatus'])->where('isVisible', true);
             $query->where('id', '!=', Auth::id())
                 ->whereNotIn('id', function ($query) {
                     $query->select('friend_id')
@@ -26,6 +27,15 @@ class UserController extends Controller
                         ->where('user_id', Auth::id())
                         ->where('status', 'Friend');
                 });
+
+            $users = $query->get()->map(function ($user) {
+                if (isset($user->friendStatus)) {
+                    $user->friendStatus->status = __('lang.' . strtolower(str_replace(' ', '_', $user->friendStatus->status)));
+                }
+                return $user;
+            });
+        } else {
+            $users = $query->get();
         }
 
         if ($request->has('gender') && $request->query('gender')) {
@@ -37,13 +47,6 @@ class UserController extends Controller
                 $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
             });
         }
-
-        $users = $query->get()->map(function ($user) {
-            if (isset($user->friendStatus)) {
-                $user->friendStatus->status = __('lang.' . strtolower(str_replace(' ', '_', $user->friendStatus->status)));
-            }
-            return $user;
-        });
 
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
         $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
@@ -137,5 +140,62 @@ class UserController extends Controller
         $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
 
         return view('pages.profile', compact('user', 'chat_notif', 'request_notif'));
+    }
+
+    public function user_profile()
+    {
+        $user = User::where('user.id', Auth::id())
+            ->join('gender', 'user.gender_id', 'gender.id')
+            ->first();
+
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+        $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
+
+        return view('pages.user-profile', compact('user', 'chat_notif', 'request_notif'));
+    }
+
+    public function make_invisible()
+    {
+        $user = User::where('user.id', Auth::id())
+            ->join('gender', 'user.gender_id', 'gender.id')
+            ->first();
+
+        $costToDisappear = 50;
+
+        if ($user->coin < $costToDisappear) {
+            return redirect()->back()->with('error', 'Insufficient coins to disappear.');
+        }
+
+        $user->coin -= $costToDisappear;
+
+        $user->isVisible = false;
+
+        $bearImage = Bear::inRandomOrder()->first()->image;
+        $user->image = $bearImage;
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'You have disappeared from the list.');
+    }
+
+    public function make_visible()
+    {
+        $user = User::where('user.id', Auth::id())
+            ->join('gender', 'user.gender_id', 'gender.id')
+            ->first();
+        $costToReappear = 5;
+
+        if ($user->coin < $costToReappear) {
+            return redirect()->back()->with('error', 'Insufficient coins to reappear.');
+        }
+
+        $user->coin -= $costToReappear;
+
+        $user->isVisible = true;
+        $user->image = file_get_contents(public_path('assets/images/default.jpg'));
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'You are now visible on the list.');
     }
 }

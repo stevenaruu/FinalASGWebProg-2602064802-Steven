@@ -16,6 +16,7 @@ class FriendController extends Controller
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
             ->where('status', 'Friend')
+            ->where('isVisible', true)
             ->select('friend.*', 'user.*', DB::raw('(SELECT COUNT(*) FROM chat WHERE recipient_id = ' . Auth::user()->id . ' AND isRead = false AND sender_id = friend.friend_id) AS unread'))
             ->get()
             ->map(function ($friend) {
@@ -35,6 +36,7 @@ class FriendController extends Controller
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
             ->where('status', 'Friend Request')
+            ->where('isVisible', true)
             ->get()
             ->map(function ($friend) {
                 $friend->status = __('lang.friend_request');
@@ -53,6 +55,7 @@ class FriendController extends Controller
             ->join('user', 'friend.friend_id', 'user.id')
             ->with(['user.hobby'])
             ->where('status', 'Sent')
+            ->where('isVisible', true)
             ->get()
             ->map(function ($friend) {
                 $friend->status = __('lang.sent_request');
