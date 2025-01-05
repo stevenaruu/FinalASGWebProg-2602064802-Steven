@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Chat;
+use App\Models\Friend;
 use App\Models\Hobby;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -25,7 +27,7 @@ class PaymentController extends Controller
 
         $amountPaid = $request->input('amount');
         $price = session('registration_price');
-        
+
         $underpaid = $price - $amountPaid;
         $overpaid = $amountPaid - $price;
         session(['overpaid_amount' => $overpaid]);
@@ -69,11 +71,34 @@ class PaymentController extends Controller
         ];
 
         session()->forget(['user_data', 'hobbies_data', 'registration_price', 'overpaid_amount']);
-        
+
         if (Auth::attempt($credentials)) {
             return redirect()->route('home');
         }
 
         return redirect()->route('login')->withErrors(['login' => __('lang.invalid_credentials')])->withInput();
+    }
+
+    public function top_up()
+    {
+        $user = User::where('user.id', Auth::id())
+            ->join('gender', 'user.gender_id', 'gender.id')
+            ->first();
+
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+        $request_notif = Auth::check() ? Friend::where('user_id', Auth::id())->where('status', 'Friend Request')->count() : 0;
+
+        return view('pages.top-up', compact('user', 'chat_notif', 'request_notif'));
+    }
+
+    public function do_top_up()
+    {
+        $user = User::where('user.id', Auth::id())->first();
+
+        $user->coin += 100;
+
+        $user->save();
+
+        return redirect()->back()->with('success', 'You have successfully added 100 coins to your balance. Thank you for your top-up!');
     }
 }

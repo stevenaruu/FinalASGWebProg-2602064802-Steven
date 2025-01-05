@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AvatarController;
 use App\Http\Controllers\ChatController;
 use App\Http\Controllers\FriendController;
 use App\Http\Controllers\PaymentController;
@@ -37,6 +38,11 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
 
     Route::post('/settings/invisible', [UserController::class, 'make_invisible'])->name('make-invisible');
     Route::post('/settings/visible', [UserController::class, 'make_visible'])->name('make-visible');
+
+    Route::get('/top-up', [PaymentController::class, 'top_up'])->name('top-up');
+    Route::post('/top-up', [PaymentController::class, 'do_top_up'])->name('do-top-up');
+
+    Route::get('/avatar', [AvatarController::class, 'index'])->name('avatar');
 });
 
 Route::get('/set-locale/{locale}', function ($locale) {

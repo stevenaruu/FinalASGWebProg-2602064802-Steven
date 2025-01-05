@@ -66,8 +66,8 @@
                         Settings
                     </div>
                     <div class="card-body d-flex flex-column">
-                        <button class="alert alert-secondary py-2 fw-bold">Avatar</button>
-                        <button class="alert alert-secondary py-2 fw-bold">Top Up Coins</button>
+                        <button onclick="window.location='{{ route('avatar') }}'" class="alert alert-secondary py-2 fw-bold">Avatar</button>
+                        <button onclick="window.location='{{ route('top-up') }}'" class="alert alert-secondary py-2 fw-bold">Top Up Coins</button>
                         <form action="{{ $user->isVisible ? route('make-invisible') : route('make-visible') }}"
                             method="POST">
                             @csrf
