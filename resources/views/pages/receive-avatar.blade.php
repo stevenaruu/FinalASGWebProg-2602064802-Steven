@@ -17,28 +17,21 @@
                                 {{ $avatar->title }}
                             </div>
                             <div>
-                                <span class="badge bg-secondary text-white">
-                                    Owned
+                                <span class="badge bg-warning text-white">
+                                    {{ $avatar->coin }}
                                 </span>
+                                Coins
                             </div>
                         </div>
                         <img src="data:image/jpeg;base64,{{ base64_encode($avatar->image) }}" class="card-img-top"
                             alt="...">
                         <div class="card-body d-flex align-items-center justify-content-center">
-                            @if ($avatar->isActive)
-                                <form action="{{ route('remove-profile') }}" method="POST">
-                                    @csrf
-                                    <button class="shadow-sm px-5 btn btn-secondary text-white fw-bold">Remove
-                                        Avatar</button>
-                                    <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
-                                </form>
-                                @else
-                                <form action="{{ route('change-profile') }}" method="POST">
-                                    @csrf
-                                    <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">Use Avatar</button>
-                                    <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
-                                </form>
-                            @endif
+                            <form action="{{ route('claim-avatar') }}" method="POST">
+                                @csrf
+                                <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">Claim
+                                    Avatar</button>
+                                <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
+                            </form>
                         </div>
                     </div>
                 </div>

@@ -65,4 +65,5 @@
             @endforeach
         </div>
     </div>
+    @include('components.chat-button')
 @endsection

@@ -15,11 +15,7 @@
             </div>
             <button onclick="window.location='{{ route('avatar') }}'"
                 class="btn btn-secondary d-flex align-items-center">
-                Avatar
-            </button>
-            <button onclick="window.location='{{ route('my-avatar') }}'"
-                class="btn btn-secondary d-flex align-items-center">
-                My Avatar
+                Send Avatar
             </button>
             <button onclick="window.location='{{ route('receive-avatar') }}'"
                 class="btn btn-secondary d-flex align-items-center">
@@ -27,10 +23,6 @@
                 @if ($pending_avatar_count > 0)
                     <span class="badge bg-warning text-white ms-2">{{ $pending_avatar_count }}</span>
                 @endif
-            </button>
-            <button onclick="window.location='{{ route('show-off') }}'"
-                class="btn btn-secondary d-flex align-items-center">
-                Show Off
             </button>
             <button onclick="window.location='{{ route('top-up') }}'"
                 class="btn btn-secondary d-flex align-items-center">

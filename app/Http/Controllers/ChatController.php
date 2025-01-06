@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Chat;
 use App\Models\User;
+use App\Models\UserAvatar;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,5 +38,21 @@ class ChatController extends Controller
         ]);
 
         return redirect()->back();
+    }
+
+    public function send_avatar_view($friend_id)
+    {
+        $recipient = User::where('id', $friend_id)->first();
+        $avatars = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Saved')
+            ->get();
+
+        $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->count();
+
+        return view('pages.send-avatar', compact('recipient', 'avatars', 'pending_avatar_count'));
     }
 }

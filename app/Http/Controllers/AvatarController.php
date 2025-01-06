@@ -23,7 +23,14 @@ class AvatarController extends Controller
             ->join('gender', 'user.gender_id', 'gender.id')
             ->first();
 
-        return view('pages.avatar', compact('avatars', 'owned_avatars', 'user'));
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+
+        $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->count();
+
+        return view('pages.avatar', compact('avatars', 'chat_notif', 'pending_avatar_count', 'owned_avatars', 'user'));
     }
 
     public function my_avatar()
@@ -33,7 +40,62 @@ class AvatarController extends Controller
             ->where('status', 'Saved')
             ->get();
 
-        return view('pages.my-avatar', compact('avatars'));
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+
+        $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->count();
+
+        return view('pages.my-avatar', compact('avatars', 'chat_notif', 'pending_avatar_count'));
+    }
+
+    public function receive_avatar()
+    {
+        $avatars = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->get();
+
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+
+        $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->count();
+
+        return view('pages.receive-avatar', compact('avatars', 'chat_notif', 'pending_avatar_count'));
+    }
+
+    public function claim_avatar(Request $request)
+    {
+        $avatar_id = $request->avatar_id;
+
+        $avatar = UserAvatar::where('avatar_id', $avatar_id)
+            ->where('user_id', Auth::id())->first();
+
+        $avatar->status = 'Saved';
+        $avatar->save();
+
+        return redirect()->back()->with('success', 'Successfully claimed avatar.');
+    }
+
+    public function send_avatar(Request $request){
+        $avatar_id = $request->avatar_id;
+        $recipient_id = $request->recipient_id;
+
+        $user_avatar = UserAvatar::where('avatar_id', $avatar_id)
+            ->where('user_id', Auth::id())->first();
+
+        $user_avatar->delete();
+
+        UserAvatar::create([
+            'user_id' => $recipient_id,
+            'avatar_id' => $avatar_id,
+            'status' => 'Pending'
+        ]);
+
+        return redirect()->back()->with('success', 'Successfully sent avatar.');
     }
 
     public function buy_avatar(Request $request)

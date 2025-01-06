@@ -24,6 +24,11 @@ class UserAvatarSeeder extends Seeder
                 'user_id' => 1,
                 'avatar_id' => 2,
                 'status' => 'Saved',
+            ],
+            [
+                'user_id' => 1,
+                'avatar_id' => 3,
+                'status' => 'Pending',
             ]
         ];
 

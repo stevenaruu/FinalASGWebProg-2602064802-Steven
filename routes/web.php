@@ -35,6 +35,7 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
 
     Route::get('/chat/{user_id}/{friend_id}', [ChatController::class, 'index'])->name('chat');
     Route::post('/chat', [ChatController::class, 'send_message'])->name('send-message');
+    Route::get('/send-avatar/{friend_id}', [ChatController::class, 'send_avatar_view'])->name('send-avatar-view');
 
     Route::post('/settings/invisible', [UserController::class, 'make_invisible'])->name('make-invisible');
     Route::post('/settings/visible', [UserController::class, 'make_visible'])->name('make-visible');
@@ -47,6 +48,9 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
     Route::post('/avatar', [AvatarController::class, 'buy_avatar'])->name('avatar-buy');
     Route::post('/avatar/change-profile', [AvatarController::class, 'change_profile'])->name('change-profile');
     Route::post('/avatar/remove-profile', [AvatarController::class, 'remove_profile'])->name('remove-profile');
+    Route::get('/avatar/receive-avatar', [AvatarController::class, 'receive_avatar'])->name('receive-avatar');
+    Route::post('/send-avatar', [AvatarController::class, 'send_avatar'])->name('send-avatar');
+    Route::post('/avatar/claim-avatar', [AvatarController::class, 'claim_avatar'])->name('claim-avatar');
     Route::get('/avatar/show-off', [AvatarController::class, 'show_off'])->name('show-off');
 });
 

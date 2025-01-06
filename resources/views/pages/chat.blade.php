@@ -64,9 +64,10 @@
                 @endforeach
             </div>
             <div class="card-footer alert alert-warning m-0">
-                <form method="POST" class="d-flex gap-3" action="{{ route('send-message') }}">
+                <form method="POST" class="d-flex justify-content-between align-items-center gap-3" action="{{ route('send-message') }}">
                     @csrf
-                    <input placeholder="@lang('lang.type_message')" class="px-2 w-100" type="text" name="message" id="message">
+                    <img role="button" onclick="window.location='{{ route('send-avatar-view', $recipient->id) }}'" height="35px" width="35px" src="{{ asset('assets/images/avatar.png') }}" alt="">
+                    <input placeholder="@lang('lang.type_message')" class="px-2 py-1 w-100" type="text" name="message" id="message">
                     <input type="hidden" name="recipient_id" value="{{ $recipient->id }}" id="recipient_id">
                     <input type="hidden" name="sender_id" value="{{ auth()->user()->id }}" id="sender_id">
                     <button type="submit" class="btn btn-warning">@lang('lang.send')</button>
