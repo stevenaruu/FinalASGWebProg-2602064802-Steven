@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->longText('image')->charset('binary');
+            $table->integer('coin');
             $table->timestamps();
         });
     }

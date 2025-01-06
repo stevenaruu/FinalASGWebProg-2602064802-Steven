@@ -13,12 +13,17 @@
                         src="{{ asset('assets/images/en.png') }}" alt="English" class="w-100 h-100 object-fit-cover">
                 @endif
             </div>
-            <button onclick="window.location='{{ route('friend') }}'"
+            <button onclick="window.location='{{ route('avatar') }}'"
                 class="btn btn-secondary d-flex align-items-center">
-                @lang('lang.friend')
-                @if ($request_notif > 0)
-                    <span class="badge bg-warning text-white ms-2">{{ $request_notif }}</span>
-                @endif
+                Avatar
+            </button>
+            <button onclick="window.location='{{ route('my-avatar') }}'"
+                class="btn btn-secondary d-flex align-items-center">
+                My Avatar
+            </button>
+            <button onclick="window.location='{{ route('show-off') }}'"
+                class="btn btn-secondary d-flex align-items-center">
+                Show Off
             </button>
             <button onclick="window.location='{{ route('top-up') }}'"
                 class="btn btn-secondary d-flex align-items-center">

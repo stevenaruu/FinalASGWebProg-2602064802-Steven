@@ -18,7 +18,7 @@ return new class extends Migration
             $table->string('mobile_number');
             $table->integer('coin');
             $table->string('password');
-            $table->binary('image')->nullable();
+            $table->longText('image')->charset('binary');
             $table->boolean('isVisible')->default(true);
             $table->timestamps();
         });

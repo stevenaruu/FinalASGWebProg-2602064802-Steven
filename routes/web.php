@@ -43,6 +43,10 @@ Route::middleware(['CheckAuth:auth'])->group(function () {
     Route::post('/top-up', [PaymentController::class, 'do_top_up'])->name('do-top-up');
 
     Route::get('/avatar', [AvatarController::class, 'index'])->name('avatar');
+    Route::get('/avatar/my-avatar', [AvatarController::class, 'my_avatar'])->name('my-avatar');
+    Route::post('/avatar', [AvatarController::class, 'buy_avatar'])->name('avatar-buy');
+    Route::post('/avatar/change-profile', [AvatarController::class, 'change_profile'])->name('change-profile');
+    Route::post('/avatar/remove-profile', [AvatarController::class, 'remove_profile'])->name('remove-profile');
     Route::get('/avatar/show-off', [AvatarController::class, 'show_off'])->name('show-off');
 });
 
