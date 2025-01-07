@@ -80,7 +80,8 @@ class AvatarController extends Controller
         return redirect()->back()->with('success', 'Successfully claimed avatar.');
     }
 
-    public function send_avatar(Request $request){
+    public function send_avatar(Request $request)
+    {
         $avatar_id = $request->avatar_id;
         $recipient_id = $request->recipient_id;
 
@@ -172,6 +173,19 @@ class AvatarController extends Controller
 
     public function show_off()
     {
-        return view('pages.show-off');
+        $avatars = UserAvatar::join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->join('user', 'user_avatar.user_id', 'user.id')
+            ->where('status', 'Saved')
+            ->select('user_avatar.*', 'avatar.*', 'user.username')
+            ->get();
+
+        $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
+
+        $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
+            ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
+            ->where('status', 'Pending')
+            ->count();
+
+        return view('pages.show-off', compact('avatars', 'chat_notif', 'pending_avatar_count'));
     }
 }
