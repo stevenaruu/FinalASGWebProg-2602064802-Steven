@@ -45,6 +45,16 @@ class FriendSeeder extends Seeder
                 'friend_id' => '1',
                 'status' => 'Friend'
             ],
+            [
+                'user_id' => '5',
+                'friend_id' => '2',
+                'status' => 'Friend'
+            ],
+            [
+                'user_id' => '2',
+                'friend_id' => '5',
+                'status' => 'Friend'
+            ],
         ];
 
         Friend::insert($friends);

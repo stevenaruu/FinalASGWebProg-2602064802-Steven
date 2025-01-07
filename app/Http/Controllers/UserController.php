@@ -28,6 +28,16 @@ class UserController extends Controller
                         ->where('status', 'Friend');
                 });
 
+            if ($request->has('gender') && $request->query('gender')) {
+                $query->where('gender_id', $request->query('gender'));
+            }
+
+            if ($request->has('hobby') && $request->query('hobby')) {
+                $query->whereHas('hobby', function ($q) use ($request) {
+                    $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
+                });
+            }
+
             $users = $query->get()->map(function ($user) {
                 if (isset($user->friendStatus)) {
                     $user->friendStatus->status = __('lang.' . strtolower(str_replace(' ', '_', $user->friendStatus->status)));
@@ -35,17 +45,17 @@ class UserController extends Controller
                 return $user;
             });
         } else {
+            if ($request->has('gender') && $request->query('gender')) {
+                $query->where('gender_id', $request->query('gender'));
+            }
+    
+            if ($request->has('hobby') && $request->query('hobby')) {
+                $query->whereHas('hobby', function ($q) use ($request) {
+                    $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
+                });
+            }
+            
             $users = $query->get();
-        }
-
-        if ($request->has('gender') && $request->query('gender')) {
-            $query->where('gender_id', $request->query('gender'));
-        }
-
-        if ($request->has('hobby') && $request->query('hobby')) {
-            $query->whereHas('hobby', function ($q) use ($request) {
-                $q->where('hobby', 'LIKE', '%' . $request->query('hobby') . '%');
-            });
         }
 
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;

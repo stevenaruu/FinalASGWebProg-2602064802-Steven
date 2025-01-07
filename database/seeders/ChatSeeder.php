@@ -34,8 +34,16 @@ class ChatSeeder extends Seeder
             'created_at' => now()->addSeconds(10), // 10 seconds delay
         ];
 
+        $steven = [
+            'sender_id' => '2',
+            'recipient_id' => '5',
+            'message' => 'hallooowwww apple!!',
+            'created_at' => now()->addSeconds(15), // 5 seconds delay
+        ];
+
         Chat::create($stvnism);
         Chat::create($apple);
         Chat::create($stvnism2);
+        Chat::create($steven);
     }
 }

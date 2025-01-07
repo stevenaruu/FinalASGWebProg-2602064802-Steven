@@ -58,7 +58,7 @@ class FriendController extends Controller
             ->where('isVisible', true)
             ->get()
             ->map(function ($friend) {
-                $friend->status = __('lang.sent_request');
+                $friend->status = __('lang.sent');
                 return $friend;
             });
 
