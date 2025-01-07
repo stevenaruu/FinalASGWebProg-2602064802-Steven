@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\Chat;
 use App\Models\User;
 use App\Models\UserAvatar;
@@ -46,7 +47,11 @@ class ChatController extends Controller
         $avatars = UserAvatar::where('user_id', Auth::id())
             ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
             ->where('status', 'Saved')
-            ->get();
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
 
         $pending_avatar_count = UserAvatar::where('user_id', Auth::id())
             ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')

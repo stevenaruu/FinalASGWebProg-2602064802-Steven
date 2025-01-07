@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Str;
 use App\Models\Avatar;
 use App\Models\Chat;
 use App\Models\Friend;
@@ -16,8 +17,19 @@ class AvatarController extends Controller
     public function index()
     {
         $user_avatar_id = UserAvatar::where('user_id', Auth::id())->where('status', 'Saved')->get()->pluck('avatar_id');
-        $avatars = Avatar::whereNotIn('id', $user_avatar_id)->get();
-        $owned_avatars = Avatar::whereIn('id', $user_avatar_id)->get();
+        $avatars = Avatar::whereNotIn('id', $user_avatar_id)
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
+
+        $owned_avatars = Avatar::whereIn('id', $user_avatar_id)
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
 
         $user = User::where('user.id', Auth::id())
             ->join('gender', 'user.gender_id', 'gender.id')
@@ -38,7 +50,11 @@ class AvatarController extends Controller
         $avatars = UserAvatar::where('user_id', Auth::id())
             ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
             ->where('status', 'Saved')
-            ->get();
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
 
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
 
@@ -55,7 +71,11 @@ class AvatarController extends Controller
         $avatars = UserAvatar::where('user_id', Auth::id())
             ->join('avatar', 'user_avatar.avatar_id', 'avatar.id')
             ->where('status', 'Pending')
-            ->get();
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
 
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
 
@@ -77,7 +97,7 @@ class AvatarController extends Controller
         $avatar->status = 'Saved';
         $avatar->save();
 
-        return redirect()->back()->with('success', 'Successfully claimed avatar.');
+        return redirect()->back()->with('success', __('lang.claim_avatar_message'));
     }
 
     public function send_avatar(Request $request)
@@ -96,7 +116,7 @@ class AvatarController extends Controller
             'status' => 'Pending'
         ]);
 
-        return redirect()->back()->with('success', 'Successfully sent avatar.');
+        return redirect()->back()->with('success', __('lang.send_avatar_message'));
     }
 
     public function buy_avatar(Request $request)
@@ -109,7 +129,7 @@ class AvatarController extends Controller
         $user->coin -= $coin;
 
         if ($user->coin < 0) {
-            return redirect()->back()->with('error', 'You do not have enough coins to buy this avatar.');
+            return redirect()->back()->with('error', __('lang.not_enough_bought_avatar_message'));
         }
 
         UserAvatar::create([
@@ -120,7 +140,7 @@ class AvatarController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Successfully bought avatar.');
+        return redirect()->back()->with('success', __('lang.bought_avatar_message'));
     }
 
     public function change_profile(Request $request)
@@ -148,7 +168,7 @@ class AvatarController extends Controller
         $user->image = Avatar::where('id', $avatar_id)->first()->image;
         $user->save();
 
-        return redirect()->back()->with('success', 'Successfully changed profile.');
+        return redirect()->back()->with('success', __('lang.use_avatar_message'));
     }
 
     public function remove_profile(Request $request)
@@ -168,7 +188,7 @@ class AvatarController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'Successfully removed profile.');
+        return redirect()->back()->with('success', __('lang.remove_avatar_message'));
     }
 
     public function show_off()
@@ -177,7 +197,11 @@ class AvatarController extends Controller
             ->join('user', 'user_avatar.user_id', 'user.id')
             ->where('status', 'Saved')
             ->select('user_avatar.*', 'avatar.*', 'user.username')
-            ->get();
+            ->get()
+            ->map(function ($avatar) {
+                $avatar->title = __('lang.' . Str::snake(strtolower($avatar->title)));
+                return $avatar;
+            });
 
         $chat_notif = Auth::check() ? Chat::where('recipient_id', Auth::id())->where('isRead', false)->count() : 0;
 

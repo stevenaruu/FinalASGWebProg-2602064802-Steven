@@ -25,13 +25,13 @@
                                 <span class="badge bg-warning text-white">
                                     {{ $avatar->coin }}
                                 </span>
-                                Coins
+                                @lang('lang.coin')
                             </div>
                         </div>
                         <img src="data:image/jpeg;base64,{{ base64_encode($avatar->image) }}" class="card-img-top"
                             alt="...">
                         <div class="card-body d-flex align-items-center justify-content-center">
-                            <button class="shadow-sm px-5 btn btn-secondary disabled text-white fw-bold">Owned</button>
+                            <button class="shadow-sm px-5 btn btn-secondary disabled text-white fw-bold">@lang('lang.owned')</button>
                         </div>
                     </div>
                 </div>
@@ -47,7 +47,7 @@
                                 <span class="badge bg-warning text-white">
                                     {{ $avatar->coin }}
                                 </span>
-                                Coins
+                                @lang('lang.coin')
                             </div>
                         </div>
                         <img src="data:image/jpeg;base64,{{ base64_encode($avatar->image) }}" class="card-img-top"
@@ -55,7 +55,7 @@
                         <div class="card-body d-flex align-items-center justify-content-center">
                             <form action="{{ route('avatar-buy') }}" method="POST">
                                 @csrf
-                                <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">Buy Avatar</button>
+                                <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">@lang('lang.buy_avatar')</button>
                                 <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
                                 <input type="hidden" name="coins" value="{{ $avatar->coin }}">
                             </form>

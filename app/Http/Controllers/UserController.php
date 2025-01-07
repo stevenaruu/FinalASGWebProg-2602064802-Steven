@@ -163,7 +163,7 @@ class UserController extends Controller
         $costToDisappear = 50;
 
         if ($user->coin < $costToDisappear) {
-            return redirect()->back()->with('error', 'Insufficient coins to disappear.');
+            return redirect()->back()->with('error', __('lang.disappear_message'));
         }
 
         $user->coin -= $costToDisappear;
@@ -175,7 +175,7 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'You have disappeared from the list.');
+        return redirect()->back()->with('success', __('lang.invisible_message'));
     }
 
     public function make_visible()
@@ -186,7 +186,7 @@ class UserController extends Controller
         $costToReappear = 5;
 
         if ($user->coin < $costToReappear) {
-            return redirect()->back()->with('error', 'Insufficient coins to reappear.');
+            return redirect()->back()->with('error', __('lang.reappear_message'));
         }
 
         $user->coin -= $costToReappear;
@@ -196,6 +196,6 @@ class UserController extends Controller
 
         $user->save();
 
-        return redirect()->back()->with('success', 'You are now visible on the list.');
+        return redirect()->back()->with('success', __('lang.visible_message'));
     }
 }

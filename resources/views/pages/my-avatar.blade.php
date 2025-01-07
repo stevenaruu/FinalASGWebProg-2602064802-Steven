@@ -18,7 +18,7 @@
                             </div>
                             <div>
                                 <span class="badge bg-secondary text-white">
-                                    Owned
+                                    @lang('lang.owned')
                                 </span>
                             </div>
                         </div>
@@ -28,14 +28,13 @@
                             @if ($avatar->isActive)
                                 <form action="{{ route('remove-profile') }}" method="POST">
                                     @csrf
-                                    <button class="shadow-sm px-5 btn btn-secondary text-white fw-bold">Remove
-                                        Avatar</button>
+                                    <button class="shadow-sm px-5 btn btn-secondary text-white fw-bold">@lang('lang.remove_avatar')</button>
                                     <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
                                 </form>
                                 @else
                                 <form action="{{ route('change-profile') }}" method="POST">
                                     @csrf
-                                    <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">Use Avatar</button>
+                                    <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">@lang('lang.use_avatar')</button>
                                     <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
                                 </form>
                             @endif

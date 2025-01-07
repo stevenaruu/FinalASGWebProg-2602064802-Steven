@@ -66,7 +66,7 @@
                                         <span class="badge bg-warning text-white">
                                             {{ $avatar->coin }}
                                         </span>
-                                        Coins
+                                        @lang('lang.coin')
                                     </div>
                                 </div>
                                 <img src="data:image/jpeg;base64,{{ base64_encode($avatar->image) }}" class="card-img-top"
@@ -74,8 +74,7 @@
                                 <div class="card-body d-flex align-items-center justify-content-center">
                                     <form action="{{ route('send-avatar') }}" method="POST">
                                         @csrf
-                                        <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">Send
-                                            Avatar</button>
+                                        <button class="shadow-sm px-5 btn btn-warning text-white fw-bold">@lang('lang.send_avatar')</button>
                                         <input type="hidden" name="avatar_id" value="{{ $avatar->id }}">
                                         <input type="hidden" name="recipient_id" value="{{ $recipient->id }}">
                                     </form>

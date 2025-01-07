@@ -15,11 +15,11 @@
             </div>
             <button onclick="window.location='{{ route('avatar') }}'"
                 class="btn btn-secondary d-flex align-items-center">
-                Send Avatar
+                @lang('lang.send_avatar')
             </button>
             <button onclick="window.location='{{ route('receive-avatar') }}'"
                 class="btn btn-secondary d-flex align-items-center">
-                Receive Avatar
+                @lang('lang.recieve_avatar')
                 @if ($pending_avatar_count > 0)
                     <span class="badge bg-warning text-white ms-2">{{ $pending_avatar_count }}</span>
                 @endif
